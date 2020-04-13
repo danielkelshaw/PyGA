@@ -1,6 +1,7 @@
 import copy
 import numpy as np
 from .individual import Individual
+from .utils.selections import TournamentSelection
 
 
 class SOGA:
@@ -29,6 +30,8 @@ class SOGA:
             Current state of the population for the optimisation.
         best_individual : Individual
             The individual with the most-optimum fitness.
+        selection : BaseSelection
+            Selection class used to generate parents from population.
         """
 
         if len(lb) != len(ub):
@@ -47,6 +50,8 @@ class SOGA:
 
         self.population = []
         self.best_individual = None
+
+        self.selection = TournamentSelection()
 
     def reset_environment(self):
 
@@ -88,25 +93,6 @@ class SOGA:
             self.best_individual = copy.deepcopy(individual)
         elif individual.fitness < self.best_individual.fitness:
             self.best_individual = copy.deepcopy(individual)
-
-    @staticmethod
-    def select(population):
-
-        """
-        Selects a random individual from the population.
-
-        Parameters
-        ----------
-        population : list of Individuals
-            List from which to randomly select and copy an individual.
-
-        Returns
-        -------
-        Individual
-            Copy of random individual selected from population.
-        """
-
-        return copy.deepcopy(np.random.choice(population))
 
     @staticmethod
     def crossover(ia, ib):
@@ -189,10 +175,12 @@ class SOGA:
                 self.evaluate_fitness(individual, fn)
                 self.update_best(individual)
 
+            self.selection.preprocess(self.population)
+
             _population = []
             for i in range(self.n_individuals // 2):
-                parent_a = self.select(self.population)
-                parent_b = self.select(self.population)
+                parent_a = self.selection.select(self.population)
+                parent_b = self.selection.select(self.population)
                 child_a, child_b = self.crossover(parent_a, parent_b)
                 child_a, child_b = self.mutate(child_a), self.mutate(child_b)
                 _population.extend([child_a, child_b])
