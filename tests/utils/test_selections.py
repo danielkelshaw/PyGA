@@ -50,7 +50,7 @@ class TestFitnessProportionateSelection:
         selection = FitnessProportionateSelection()
         selection.preprocess(population)
 
-        assert selection.cdf[-1] == cdf_sum
+        assert selection.cdf[-1] == pytest.approx(cdf_sum, 1e-6)
         assert isinstance(selection.cdf, list)
 
     def test_select(self, population):
@@ -70,7 +70,7 @@ class TestStochasticUniversalSamplingSelection:
         selection = StochasticUniversalSamplingSelection()
         selection.preprocess(population)
 
-        assert selection.cdf[-1] == cdf_sum
+        assert selection.cdf[-1] == pytest.approx(cdf_sum, 1e-6)
         assert isinstance(selection.cdf, list)
         assert isinstance(selection.population, list)
         for ind in selection.population:

@@ -1,0 +1,78 @@
+import pytest
+from pyga.individual import Individual
+from pyga.utils.crossovers import *
+
+
+@pytest.fixture
+def parent_a():
+    return Individual([0.0, 0.0, 0.0, 0.0], [50.0, 50.0, 50.0, 50.0])
+
+
+@pytest.fixture
+def parent_b():
+    return Individual([0.0, 0.0, 0.0, 0.0], [50.0, 50.0, 50.0, 50.0])
+
+
+class TestOnePointCrossover:
+
+    def test_cross(self, parent_a, parent_b):
+
+        set_a, set_b = set(parent_a.position), set(parent_b.position)
+        total_parent_set = set_a | set_b
+
+        crossover = OnePointCrossover()
+        ret_a, ret_b = crossover.cross(parent_a, parent_b)
+
+        set_ret_a, set_ret_b = set(ret_a.position), set(ret_b.position)
+        total_ret_set = set_ret_a | set_ret_b
+
+        assert total_parent_set == total_ret_set
+        assert isinstance(ret_a, Individual)
+        assert isinstance(ret_b, Individual)
+
+
+class TestTwoPointCrossover:
+
+    def test_cross(self, parent_a, parent_b):
+        set_a, set_b = set(parent_a.position), set(parent_b.position)
+        total_parent_set = set_a | set_b
+
+        crossover = TwoPointCrossover()
+        ret_a, ret_b = crossover.cross(parent_a, parent_b)
+
+        set_ret_a, set_ret_b = set(ret_a.position), set(ret_b.position)
+        total_ret_set = set_ret_a | set_ret_b
+
+        assert total_parent_set == total_ret_set
+        assert isinstance(ret_a, Individual)
+        assert isinstance(ret_b, Individual)
+
+
+class TestUniformCrossover:
+
+    @pytest.mark.parametrize('p_swap', [0.1, None, 0.7])
+    def test_cross(self, parent_a, parent_b, p_swap):
+
+        if p_swap == 0.7:
+            with pytest.raises(ValueError):
+                crossover = UniformCrossover(p_swap=p_swap)
+
+        else:
+            crossover = UniformCrossover(p_swap=p_swap)
+            ret_a, ret_b = crossover.cross(parent_a, parent_b)
+
+            set_a, set_b = set(parent_a.position), set(parent_b.position)
+            total_parent_set = set_a | set_b
+
+            set_ret_a, set_ret_b = set(ret_a.position), set(ret_b.position)
+            total_ret_set = set_ret_a | set_ret_b
+
+            assert total_parent_set == total_ret_set
+            assert isinstance(ret_a, Individual)
+            assert isinstance(ret_b, Individual)
+
+
+class TestKVectorUniformCrossover:
+
+    def test_cross(self):
+        pass
