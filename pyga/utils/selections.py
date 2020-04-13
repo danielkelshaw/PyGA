@@ -1,7 +1,7 @@
 import abc
 import copy
-import itertools as it
 import numpy as np
+import itertools as it
 
 
 class BaseSelection(abc.ABC):
