@@ -33,6 +33,8 @@ class SOGA:
             The individual with the most-optimum fitness.
         selection : BaseSelection
             Selection class used to generate parents from population.
+        crossover : BaseCrossover
+            Crossover class used to generate children given two parents.
         """
 
         if len(lb) != len(ub):
