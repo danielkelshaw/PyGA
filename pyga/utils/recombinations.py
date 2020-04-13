@@ -4,7 +4,19 @@ from .crossovers import BaseCrossover
 
 class BaseRecombination(BaseCrossover):
 
+    """Abstract Base Class for Recombination functionality."""
+
     def __init__(self, p):
+
+        """
+        Initialises Recombination Class.
+
+        Parameters
+        ----------
+        p : float
+            Parameter used in recombination calculations.
+        """
+
         self.p = p
 
         if not self.p > 0:
@@ -15,10 +27,31 @@ class BaseRecombination(BaseCrossover):
 
     @staticmethod
     def _in_bounds(v, lb, ub):
+
+        """
+        Determines whether vector is within defined bounds.
+
+        Parameters
+        ----------
+        v : np.ndarray
+            Array to determine if within bounds.
+        lb : np.ndarray
+            Lower bound.
+        ub : np.ndarray
+            Upper bound.
+
+        Returns
+        -------
+        bool
+            True if v is within the prescribed bounds.
+        """
+
         return np.logical_and(v >= lb, v <= ub).all()
 
 
 class LineRecombination(BaseRecombination):
+
+    """Implementation of Linear Recombination method."""
 
     def __init__(self, p=0.25):
         super().__init__(p)
@@ -41,6 +74,8 @@ class LineRecombination(BaseRecombination):
 
 
 class IntermediateRecombination(BaseRecombination):
+
+    """Implementation of Intermediate Recombination method."""
 
     def __init__(self, p=0.25):
         super().__init__(p)
