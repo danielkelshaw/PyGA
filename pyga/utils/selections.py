@@ -6,16 +6,47 @@ import itertools as it
 
 class BaseSelection(abc.ABC):
 
+    """Abstract Base Class for all Selection functionality."""
+
     @abc.abstractmethod
     def preprocess(self, population):
+
+        """
+        Responsible for any preprocessing required for the selection
+        method - this can be useful for reducing computational costs
+        in some instances.
+
+        Parameters
+        ----------
+        population : list
+            List of individuals.
+        """
+
         raise NotImplementedError('BaseSelection::preprocess()')
 
     @abc.abstractmethod
     def select(self, population):
+
+        """
+        Selects an individual from the population.
+
+        Parameters
+        ----------
+        population : list
+            List from which to select an individual.
+
+        Returns
+        -------
+        Individual
+            Copy of the individual selected from the population.
+        """
+
         raise NotImplementedError('BaseSelection::select()')
 
 
 class RandomSelection(BaseSelection):
+
+    """Implementation of 'random selection'."""
 
     def preprocess(self, population):
         pass
@@ -26,7 +57,18 @@ class RandomSelection(BaseSelection):
 
 class TournamentSelection(BaseSelection):
 
+    """Implementation of 'tournament selection'."""
+
     def __init__(self, t_size=2):
+
+        """
+        Initialises the TournamentSelection Class.
+
+        Parameters
+        ----------
+        t_size : int
+            Tournament size.
+        """
 
         if t_size < 2:
             raise ValueError('t_size must be >= 1')
@@ -47,7 +89,19 @@ class TournamentSelection(BaseSelection):
 
 class FitnessProportionateSelection(BaseSelection):
 
+    """Implementation of 'fitness-proportionate selection'."""
+
     def __init__(self):
+
+        """
+        Initialises the FitnessProportionateSelection Class.
+
+        Attributes
+        ----------
+        cdf : list
+            Cumulative fitness for the population.
+        """
+
         self.cdf = None
 
     def preprocess(self, population):
@@ -65,6 +119,8 @@ class FitnessProportionateSelection(BaseSelection):
 
 class TruncationSelection(BaseSelection):
 
+    """Implementation of 'truncation selection'."""
+
     def preprocess(self, population):
         pass
 
@@ -74,7 +130,27 @@ class TruncationSelection(BaseSelection):
 
 class StochasticUniversalSamplingSelection(BaseSelection):
 
+    """Implementation of 'stochastic universal sampling selection'."""
+
     def __init__(self):
+
+        """
+        Initialises StochasticUniversalSamplingSelection Class.
+
+        Attributes
+        ----------
+        population : list
+            Holds the current population.
+        flist : list
+            Fitnesses of all members of the population.
+        cdf : list
+            Cumulative fitness for the population.
+        index : int
+            Current index from which to select a population member.
+        value : float
+            Value used to determine the index from which to sample.
+        """
+
         self.population = None
         self.flist = None
         self.cdf = None
@@ -100,6 +176,21 @@ class StochasticUniversalSamplingSelection(BaseSelection):
 
     @staticmethod
     def _shuffle(population):
+
+        """
+        Randomly shuffles the members of the provided population.
+
+        Parameters
+        ----------
+        population : list
+            The population list for which to randomly shuffle.
+
+        Returns
+        -------
+        population : list
+            Shuffled population.
+        """
+
         for i in range(len(population) - 1, 1, -1):
             j = np.random.randint(0, i + 1)
             population[i], population[j] = population[j], population[i]
