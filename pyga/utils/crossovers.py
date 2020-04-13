@@ -41,7 +41,7 @@ class TwoPointCrossover(BaseCrossover):
 
 class UniformCrossover(BaseCrossover):
 
-    def __init__(self, p_swap=None):
+    def __init__(self, p_swap):
         self.p_swap = p_swap or None
 
         if self.p_swap is not None and not self.p_swap <= 0.5:
