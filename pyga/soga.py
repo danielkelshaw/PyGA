@@ -2,6 +2,7 @@ import copy
 import numpy as np
 from .individual import Individual
 from .utils.selections import TournamentSelection
+from .utils.crossovers import OnePointCrossover
 
 
 class SOGA:
@@ -52,6 +53,7 @@ class SOGA:
         self.best_individual = None
 
         self.selection = TournamentSelection()
+        self.crossover = OnePointCrossover()
 
     def reset_environment(self):
 
@@ -93,31 +95,6 @@ class SOGA:
             self.best_individual = copy.deepcopy(individual)
         elif individual.fitness < self.best_individual.fitness:
             self.best_individual = copy.deepcopy(individual)
-
-    @staticmethod
-    def crossover(ia, ib):
-
-        """
-        Performs crossover for two individuals at a random index.
-
-        Parameters
-        ----------
-        ia : Individual
-            First individual to perform crossover.
-        ib : Individual
-            Second individual to perform crossover.
-
-        Returns
-        -------
-        Individual
-            First individual with modified position.
-        Individual
-            Second individual with modified position.
-        """
-
-        ix = np.random.randint(1, len(ia.position))
-        ia.position[:ix], ia.position[ix:] = ib.position[ix:], ib.position[:ix]
-        return ia, ib
 
     @staticmethod
     def mutate(individual):
@@ -181,7 +158,7 @@ class SOGA:
             for i in range(self.n_individuals // 2):
                 parent_a = self.selection.select(self.population)
                 parent_b = self.selection.select(self.population)
-                child_a, child_b = self.crossover(parent_a, parent_b)
+                child_a, child_b = self.crossover.cross(parent_a, parent_b)
                 child_a, child_b = self.mutate(child_a), self.mutate(child_b)
                 _population.extend([child_a, child_b])
 

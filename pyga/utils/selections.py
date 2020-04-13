@@ -98,7 +98,8 @@ class StochasticUniversalSamplingSelection(BaseSelection):
 
         return self.population[self.index]
 
-    def _shuffle(self, population):
+    @staticmethod
+    def _shuffle(population):
         for i in range(len(population) - 1, 1, -1):
             j = np.random.randint(0, i + 1)
             population[i], population[j] = population[j], population[i]
