@@ -17,14 +17,11 @@ class TestOnePointCrossover:
 
     def test_cross(self, parent_a, parent_b):
 
-        set_a, set_b = set(parent_a.position), set(parent_b.position)
-        total_parent_set = set_a | set_b
-
         crossover = OnePointCrossover()
         ret_a, ret_b = crossover.cross(parent_a, parent_b)
 
-        set_ret_a, set_ret_b = set(ret_a.position), set(ret_b.position)
-        total_ret_set = set_ret_a | set_ret_b
+        total_parent_set = set(parent_a.position) | set(parent_b.position)
+        total_ret_set = set(ret_a.position) | set(ret_b.position)
 
         assert total_parent_set == total_ret_set
         assert isinstance(ret_a, Individual)
@@ -34,14 +31,12 @@ class TestOnePointCrossover:
 class TestTwoPointCrossover:
 
     def test_cross(self, parent_a, parent_b):
-        set_a, set_b = set(parent_a.position), set(parent_b.position)
-        total_parent_set = set_a | set_b
 
         crossover = TwoPointCrossover()
         ret_a, ret_b = crossover.cross(parent_a, parent_b)
 
-        set_ret_a, set_ret_b = set(ret_a.position), set(ret_b.position)
-        total_ret_set = set_ret_a | set_ret_b
+        total_parent_set = set(parent_a.position) | set(parent_b.position)
+        total_ret_set = set(ret_a.position) | set(ret_b.position)
 
         assert total_parent_set == total_ret_set
         assert isinstance(ret_a, Individual)
@@ -61,11 +56,8 @@ class TestUniformCrossover:
             crossover = UniformCrossover(p_swap=p_swap)
             ret_a, ret_b = crossover.cross(parent_a, parent_b)
 
-            set_a, set_b = set(parent_a.position), set(parent_b.position)
-            total_parent_set = set_a | set_b
-
-            set_ret_a, set_ret_b = set(ret_a.position), set(ret_b.position)
-            total_ret_set = set_ret_a | set_ret_b
+            total_parent_set = set(parent_a.position) | set(parent_b.position)
+            total_ret_set = set(ret_a.position) | set(ret_b.position)
 
             assert total_parent_set == total_ret_set
             assert isinstance(ret_a, Individual)
