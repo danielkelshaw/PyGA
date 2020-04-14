@@ -36,6 +36,8 @@ class SOGA:
             Selection class used to generate parents from population.
         crossover : BaseCrossover
             Crossover class used to generate children given two parents.
+        termination_manager : BaseTerminationManager
+            Determines if the optimisation procedure is complete.
         """
 
         if len(lb) != len(ub):
@@ -143,21 +145,32 @@ class SOGA:
         self.initialise_population()
 
         while not self.termination_manager.termination_check():
-
-            for individual in self.population:
-                self.evaluate_fitness(individual, fn)
-                self.update_best(individual)
-
-            self.selection.preprocess(self.population)
-
-            _population = []
-            for i in range(self.n_individuals // 2):
-                parent_a = self.selection.select(self.population)
-                parent_b = self.selection.select(self.population)
-                child_a, child_b = self.crossover.cross(parent_a, parent_b)
-                child_a, child_b = self.mutate(child_a), self.mutate(child_b)
-                _population.extend([child_a, child_b])
-
-            self.population = _population
-
+            self._step_optimise(fn)
             self.iteration += 1
+
+    def _step_optimise(self, fn):
+
+        """
+        Progresses the optimisation prcedure by a single iteration.
+
+        Parameters
+        ----------
+        fn : function
+            Fitness function used to evaluate the fitness.
+        """
+
+        for individual in self.population:
+            self.evaluate_fitness(individual, fn)
+            self.update_best(individual)
+
+        self.selection.preprocess(self.population)
+
+        _population = []
+        for i in range(self.n_individuals // 2):
+            parent_a = self.selection.select(self.population)
+            parent_b = self.selection.select(self.population)
+            child_a, child_b = self.crossover.cross(parent_a, parent_b)
+            child_a, child_b = self.mutate(child_a), self.mutate(child_b)
+            _population.extend([child_a, child_b])
+
+        self.population = _population
