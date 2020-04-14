@@ -24,17 +24,14 @@ can be.
 
 ```python
 import pyga
-
-
-def objective_fn(position):
-    return sum([position[i] for i in range(len(position))])
+from pyga.utils.functions import single_objective as fx
 
 
 lb = [-50.0, -50.0]
 ub = [50.0, 50.0]
 
 optimiser = pyga.SOGA(lb, ub, n_individuals=30, n_iterations=100)
-optimiser.optimise(objective_fn)
+optimiser.optimise(fx.sphere)
 ```
 
 ## **Customisation:**
