@@ -3,6 +3,7 @@ import numpy as np
 from .individual import Individual
 from .utils.selections import TournamentSelection
 from .utils.crossovers import OnePointCrossover
+from .utils.termination_manager import IterationTerminationManager
 
 
 class SOGA:
@@ -57,6 +58,8 @@ class SOGA:
         self.selection = TournamentSelection()
         self.crossover = OnePointCrossover()
 
+        self.termination_manager = IterationTerminationManager(self)
+
     def reset_environment(self):
 
         """Responsible for resetting the optimisation environment."""
@@ -71,15 +74,6 @@ class SOGA:
 
         for _ in range(self.n_individuals):
             self.population.append(Individual(self.lb, self.ub))
-
-    def termination_check(self):
-
-        """Checks if the optimisation process is complete."""
-
-        if self.iteration > self.n_iterations:
-            return True
-        else:
-            return False
 
     def update_best(self, individual):
 
@@ -148,7 +142,7 @@ class SOGA:
         self.reset_environment()
         self.initialise_population()
 
-        while not self.termination_check():
+        while not self.termination_manager.termination_check():
 
             for individual in self.population:
                 self.evaluate_fitness(individual, fn)

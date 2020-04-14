@@ -48,19 +48,6 @@ class TestSOGA:
 
         assert len(soga.population) == soga.n_individuals
 
-    @pytest.mark.parametrize('it', [5, 10, 15])
-    def test_termination_check(self, soga, it):
-
-        soga.iteration = it
-        ret_bool = soga.termination_check()
-
-        if it == 5:
-            assert not ret_bool
-        elif it == 10:
-            assert not ret_bool
-        elif it == 15:
-            assert ret_bool
-
     def test_update_best(self, soga, individual):
 
         lb = [0.0, 0.0]
