@@ -1,6 +1,7 @@
 import copy
 import numpy as np
 from .individual import Individual
+from .utils.history import GeneralHistory
 from .utils.selections import TournamentSelection
 from .utils.crossovers import OnePointCrossover
 from .utils.termination_manager import IterationTerminationManager
@@ -38,6 +39,8 @@ class SOGA:
             Crossover class used to generate children given two parents.
         termination_manager : BaseTerminationManager
             Determines if the optimisation procedure is complete.
+        history : BaseHistory
+            Records the history of the optimisation process.
         """
 
         if len(lb) != len(ub):
@@ -60,6 +63,7 @@ class SOGA:
         self.selection = TournamentSelection()
         self.crossover = OnePointCrossover()
 
+        self.history = GeneralHistory(self)
         self.termination_manager = IterationTerminationManager(self)
 
     def reset_environment(self):
@@ -174,3 +178,4 @@ class SOGA:
             _population.extend([child_a, child_b])
 
         self.population = _population
+        self.history.write_history()
