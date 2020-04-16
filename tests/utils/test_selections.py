@@ -8,7 +8,13 @@ def population():
 
     population = []
     for i in range(1, 5 + 1):
-        _ind = Individual([0], [10])
+
+        bounds = {
+            'x0': [0.0, 10.0],
+            'x1': [0.0, 10.0]
+        }
+
+        _ind = Individual(bounds)
         _ind.fitness = i
         population.append(_ind)
 

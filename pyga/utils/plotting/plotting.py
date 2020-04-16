@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
 from .plot_designer import PlotDesigner
-from pyga.utils.history import BaseHistory
+from ..history import BaseHistory
 
 
 def plot_fitness_history(history, title, designer=None, save=None):

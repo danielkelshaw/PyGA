@@ -3,31 +3,46 @@ import numpy as np
 
 class Individual:
 
-    def __init__(self, lb, ub):
+    def __init__(self, bounds):
 
         """
         Class containing information about a population member.
 
         Parameters
         ----------
-        lb : list or np.ndarray
-            Lower bound of the search space.
-        ub : list or np.ndarray
-            Upper bound of the search space.
+        bounds : dict
+            Parameter names mapped to upper / lower bounds.
 
         Attributes
         ----------
+        _pnames : list
+            Names assigned to the input bounds.
         position : np.ndarray
             Current position of the individual.
         fitness : float
             Fitness evaluation for the associated position.
         """
 
-        if len(lb) != len(ub):
-            raise ValueError(f'len(lb): {len(lb)} != len(ub): {len(ub)}')
+        if not isinstance(bounds, dict):
+            raise TypeError('bounds must be dict.')
 
-        self.lb = np.asarray(lb)
-        self.ub = np.asarray(ub)
+        self._pnames = list(bounds.keys())
+        _bounds = np.asarray(list(bounds.values()))
 
-        self.position = np.random.uniform(lb, ub)
+        self.lb = _bounds[:, 0]
+        self.ub = _bounds[:, 1]
+
+        self.position = np.random.uniform(self.lb, self.ub)
         self.fitness = None
+
+    def __str__(self):
+
+        message = 'Position = {\n'
+
+        for k, v in zip(self._pnames, self.position):
+            message += f'\t{k:<15}{v}\n'
+
+        message += '}\n'
+        message += f'\nFitness = {self.fitness}'
+
+        return message
