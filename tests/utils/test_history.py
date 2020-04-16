@@ -9,12 +9,15 @@ class TestGeneralHistory:
     @pytest.fixture
     def soga(self):
 
-        lb = [-10.0, -10.0]
-        ub = [10.0, 10.0]
-        soga = SOGA(lb, ub, n_individuals=30, n_iterations=100)
+        bounds = {
+            'x0': [0.0, 10.0],
+            'x1': [0.0, 10.0]
+
+        }
+        soga = SOGA(bounds, n_individuals=30, n_iterations=100)
         soga.initialise_population()
 
-        soga.best_individual = Individual(lb, ub)
+        soga.best_individual = Individual(bounds)
         soga.best_individual.fitness = 0.5
 
         for idx, individual in enumerate(soga.population):

@@ -27,10 +27,13 @@ import pyga
 from pyga.utils.functions import single_objective as fx
 
 
-lb = [-50.0, -50.0]
-ub = [50.0, 50.0]
+bounds = {
+    'x0': [-1e6, 1e6],
+    'x1': [-1e6, 1e6],
+    'x2': [-1e6, 1e6]
+}
 
-optimiser = pyga.SOGA(lb, ub, n_individuals=30, n_iterations=100)
+optimiser = pyga.SOGA(bounds, n_individuals=30, n_iterations=100)
 optimiser.optimise(fx.sphere)
 ```
 

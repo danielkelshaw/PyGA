@@ -8,21 +8,25 @@ class TestSOGA:
     @pytest.fixture
     def soga(self):
 
-        lb = [0.0, 0.0]
-        ub = [10.0, 10.0]
+        bounds = {
+            'x0': [0.0, 10.0],
+            'x1': [0.0, 10.0]
+        }
+
         n_individuals = 10
         n_iterations = 10
 
-        soga = SOGA(lb, ub, n_individuals, n_iterations)
+        soga = SOGA(bounds, n_individuals, n_iterations)
         return soga
 
     @pytest.fixture
     def individual(self):
+        bounds = {
+            'x0': [0.0, 10.0],
+            'x1': [0.0, 10.0]
+        }
 
-        lb = [0.0, 0.0]
-        ub = [10.0, 10.0]
-
-        individual = Individual(lb, ub)
+        individual = Individual(bounds)
         individual.fitness = 50.0
 
         return individual
@@ -50,10 +54,12 @@ class TestSOGA:
 
     def test_update_best(self, soga, individual):
 
-        lb = [0.0, 0.0]
-        ub = [10.0, 10.0]
+        bounds = {
+            'x0': [0.0, 10.0],
+            'x1': [0.0, 10.0]
+        }
 
-        soga.best_individual = Individual(lb, ub)
+        soga.best_individual = Individual(bounds)
         soga.best_individual.fitness = 100.0
 
         soga.update_best(individual)

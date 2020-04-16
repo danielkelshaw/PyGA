@@ -9,17 +9,15 @@ from .utils.termination_manager import IterationTerminationManager
 
 class SOGA:
 
-    def __init__(self, lb, ub, n_individuals, n_iterations):
+    def __init__(self, bounds, n_individuals, n_iterations):
 
         """
         Single-Objective Genetic Algorithm.
 
         Parameters
         ----------
-        lb : list or np.ndarray
-            Lower bound of the search space.
-        ub : list of np.ndarray
-            Upper bound of the search space.
+        bounds : dict
+            Parameter names mapped to upper / lower bounds.
         n_individuals : int
             Number of individuals in the population.
         n_iterations : int
@@ -27,6 +25,8 @@ class SOGA:
 
         Attributes
         ----------
+        _pnames : list
+            Names assigned to the input bounds.
         iteration : int
             Current iteration of the optimisation process.
         population : list of Individual
@@ -43,14 +43,14 @@ class SOGA:
             Records the history of the optimisation process.
         """
 
-        if len(lb) != len(ub):
-            raise ValueError(f'len(lb): {len(lb)} != len(ub): {len(ub)}')
+        if not isinstance(bounds, dict):
+            raise TypeError('bounds must be dict.')
 
         if not n_individuals % 2 == 0:
             raise ValueError('Please ensure n_individuals is even.')
 
-        self.lb = np.asarray(lb)
-        self.ub = np.asarray(ub)
+        self.bounds = bounds
+        self._pnames = list(bounds.keys())
 
         self.n_individuals = n_individuals
         self.n_iterations = n_iterations
@@ -79,7 +79,7 @@ class SOGA:
         """Generates the population list of Individuals."""
 
         for _ in range(self.n_individuals):
-            self.population.append(Individual(self.lb, self.ub))
+            self.population.append(Individual(self.bounds))
 
     def update_best(self, individual):
 

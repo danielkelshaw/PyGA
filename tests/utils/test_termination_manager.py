@@ -7,8 +7,13 @@ from pyga.utils.termination_manager import *
 
 @pytest.fixture
 def ga():
-    lb, ub = [0.0, 0.0], [50.0, 50.0]
-    ga = SOGA(lb, ub, n_individuals=10, n_iterations=100)
+
+    bounds = {
+        'x0': [0.0, 10.0],
+        'x1': [0.0, 10.0]
+    }
+
+    ga = SOGA(bounds, n_individuals=10, n_iterations=100)
     return ga
 
 
@@ -48,7 +53,13 @@ class TestEvaluationTerminationManager:
 class TestErrorTerminationManager:
 
     def test_termination_check(self, ga):
-        best = Individual([0.0, 0.0], [50.0, 50.0])
+
+        bounds = {
+            'x0': [0.0, 10.0],
+            'x1': [0.0, 10.0]
+        }
+
+        best = Individual(bounds)
         best.fitness = 0.0001
         ga.best_individual = best
 

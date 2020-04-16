@@ -5,12 +5,24 @@ from pyga.utils.recombinations import *
 
 @pytest.fixture
 def parent_a():
-    return Individual([0.0, 0.0, 0.0, 0.0], [50.0, 50.0, 50.0, 50.0])
+
+    bounds = {
+            'x0': [0.0, 10.0],
+            'x1': [0.0, 10.0]
+    }
+
+    return Individual(bounds)
 
 
 @pytest.fixture
 def parent_b():
-    return Individual([0.0, 0.0, 0.0, 0.0], [50.0, 50.0, 50.0, 50.0])
+
+    bounds = {
+            'x0': [0.0, 10.0],
+            'x1': [0.0, 10.0]
+    }
+
+    return Individual(bounds)
 
 
 class TestBaseRecombination:
