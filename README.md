@@ -37,6 +37,18 @@ optimiser = pyga.SOGA(bounds, n_individuals=30, n_iterations=100)
 optimiser.optimise(fx.sphere)
 ```
 
+## **History:**
+The optimisation history is written to a ```History``` data structure
+to allow the user to further investigate the optimisation procedure 
+upon completion. This is a powerful tool, letting the user define custom
+history classes which can record whichever data the user desires.
+
+Tracking the history of the optimisation process allows for plotting
+of the results, an example demonstration is seen in the
+```plot_fitness_history``` function - this can be further customised
+through the designation of a ```PlotDesigner``` object which provides
+formatting instructions for the graphing tools.
+
 ## **Customisation:**
 Though the base ```SOGA``` will work for many, there maybe aspects that
 one may want to change, such as the selection / recombination methods.
@@ -48,9 +60,32 @@ Attributes of the ```SOGA``` instance can be modified to implement
 alternative methods, this is demonstrated below:
 
 ```python
+# using 'uniform crossover' as the crossover method
 from pyga.utils.crossovers import UniformCrossover
-from pyga.utils.selections import FitnessProportionateSelection
-
 optimiser.crossover = UniformCrossover(p_swap=0.25)
+```
+```python
+# using 'fitness-proportionate selection' as the selection method
+from pyga.utils.selections import FitnessProportionateSelection
 optimiser.selection = FitnessProportionateSelection()
 ```
+
+It is also possible to define alternative termination criteria through
+implementation of a ```TerminationManager``` class, a couple of examples
+are demonstrated below:
+
+```python
+# using elapsed time as the termination criteria
+from pyga.utils.termination_manager import TimeTerminationManager
+optimiser.termination_manager = TimeTerminationManager(t_budget=10_000)
+```
+
+```python
+# using error as the termination criteria
+from pyga.utils.termination_manager import ErrorTerminationManager
+optimiser.termination_manager = ErrorTerminationManager(
+    optimiser, target=0.0, threshold=1e-3
+)
+```
+
+###### Author: Daniel Kelshaw
