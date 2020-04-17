@@ -49,6 +49,30 @@ of the results, an example demonstration is seen in the
 through the designation of a ```PlotDesigner``` object which provides
 formatting instructions for the graphing tools.
 
+## **Constraints:**
+
+PyGA  allows the user to define a set of constraints for the 
+optimisation problem - this is achieved through inheriting a template 
+class and implementing the designated method. An example of which is 
+demonstrated below:
+
+```python
+from pyga.constraints.base_constraints import PositionConstraint
+
+
+class UserConstraint(PositionConstraint):
+
+    def constrain(self, position):
+        return position['x0'] > 0 and position['x1'] < 0
+
+
+optimiser.constraint_manager.register_constraint(UserConstraint())
+```
+
+This provides the user with a large amount of freedom to define the
+appropriate constraints and allows the `ConstraintManager` to deal with
+the relevant constraints at the appropriate time.
+
 ## **Customisation:**
 Though the base ```SOGA``` will work for many, there maybe aspects that
 one may want to change, such as the selection / recombination methods.
