@@ -1,6 +1,9 @@
 import copy
 import numpy as np
+
 from .individual import Individual
+from .constraints.constraint_manager import ConstraintManager
+
 from .utils.history import GeneralHistory
 from .utils.selections import TournamentSelection
 from .utils.crossovers import OnePointCrossover
@@ -25,7 +28,7 @@ class SOGA:
 
         Attributes
         ----------
-        _pnames : list
+        pnames : list
             Names assigned to the input bounds.
         iteration : int
             Current iteration of the optimisation process.
@@ -50,7 +53,9 @@ class SOGA:
             raise ValueError('Please ensure n_individuals is even.')
 
         self.bounds = bounds
-        self._pnames = list(bounds.keys())
+        self.pnames = list(bounds.keys())
+
+        print(self.pnames)
 
         self.n_individuals = n_individuals
         self.n_iterations = n_iterations
@@ -65,6 +70,7 @@ class SOGA:
 
         self.history = GeneralHistory(self)
         self.termination_manager = IterationTerminationManager(self)
+        self.constraint_manager = ConstraintManager(self)
 
     def reset_environment(self):
 
@@ -165,7 +171,9 @@ class SOGA:
 
         for individual in self.population:
             self.evaluate_fitness(individual, fn)
-            self.update_best(individual)
+
+            if not self.constraint_manager.violates_position(individual):
+                self.update_best(individual)
 
         self.selection.preprocess(self.population)
 
