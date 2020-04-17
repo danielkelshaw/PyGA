@@ -38,7 +38,6 @@ class ConstraintManager:
         within_constraints = True
         for constraint in self.constraints:
             if isinstance(constraint, PositionConstraint):
-                # returns True if satisfies constraints
                 within_constraints = constraint.constrain(position)
 
             if not within_constraints:
