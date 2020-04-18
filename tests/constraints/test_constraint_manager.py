@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from pyga.soga import SOGA
+from pyga.opt.soga import SOGA
 from pyga.individual import Individual
 from pyga.constraints.base_constraints import PositionConstraint
 from pyga.constraints.constraint_manager import ConstraintManager

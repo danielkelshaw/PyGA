@@ -1,6 +1,6 @@
 import pytest
 import time
-from pyga.soga import SOGA
+from pyga.opt.soga import SOGA
 from pyga.individual import Individual
 from pyga.utils.termination_manager import *
 
