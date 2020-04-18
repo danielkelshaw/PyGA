@@ -1,6 +1,6 @@
 import pytest
 from pyga.utils.history import *
-from pyga.soga import SOGA
+from pyga.opt.soga import SOGA
 from pyga.individual import Individual
 
 

@@ -1,68 +1,22 @@
 import copy
 import numpy as np
 
-from .individual import Individual
-from .constraints.constraint_manager import ConstraintManager
+from .base_ga import BaseGA
+from ..individual import Individual
+from ..constraints.constraint_manager import ConstraintManager
 
-from .utils.history import GeneralHistory
-from .utils.selections import TournamentSelection
-from .utils.crossovers import OnePointCrossover
-from .utils.termination_manager import IterationTerminationManager
+from ..utils.history import GeneralHistory
+from ..utils.selections import TournamentSelection
+from ..utils.crossovers import OnePointCrossover
+from ..utils.termination_manager import IterationTerminationManager
 
 
-class SOGA:
+class SOGA(BaseGA):
 
     def __init__(self, bounds, n_individuals, n_iterations):
+        super().__init__(bounds, n_individuals)
 
-        """
-        Single-Objective Genetic Algorithm.
-
-        Parameters
-        ----------
-        bounds : dict
-            Parameter names mapped to upper / lower bounds.
-        n_individuals : int
-            Number of individuals in the population.
-        n_iterations : int
-            Number of iterations for the optimisation.
-
-        Attributes
-        ----------
-        pnames : list
-            Names assigned to the input bounds.
-        iteration : int
-            Current iteration of the optimisation process.
-        population : list of Individual
-            Current state of the population for the optimisation.
-        best_individual : Individual
-            The individual with the most-optimum fitness.
-        selection : BaseSelection
-            Selection class used to generate parents from population.
-        crossover : BaseCrossover
-            Crossover class used to generate children given two parents.
-        termination_manager : BaseTerminationManager
-            Determines if the optimisation procedure is complete.
-        history : BaseHistory
-            Records the history of the optimisation process.
-        """
-
-        if not isinstance(bounds, dict):
-            raise TypeError('bounds must be dict.')
-
-        if not n_individuals % 2 == 0:
-            raise ValueError('Please ensure n_individuals is even.')
-
-        self.bounds = bounds
-        self.pnames = list(bounds.keys())
-
-        print(self.pnames)
-
-        self.n_individuals = n_individuals
         self.n_iterations = n_iterations
-
-        self.iteration = 0
-
-        self.population = []
         self.best_individual = None
 
         self.selection = TournamentSelection()
@@ -140,25 +94,7 @@ class SOGA:
 
         individual.fitness = fn(individual.position)
 
-    def optimise(self, fn):
-
-        """
-        Responsible for managing the optimisation process.
-
-        Parameters
-        ----------
-        fn : function
-            Fitness function used to evaluate the fitness.
-        """
-
-        self.reset_environment()
-        self.initialise_population()
-
-        while not self.termination_manager.termination_check():
-            self._step_optimise(fn)
-            self.iteration += 1
-
-    def _step_optimise(self, fn):
+    def step_optimise(self, fn):
 
         """
         Progresses the optimisation prcedure by a single iteration.
@@ -187,3 +123,21 @@ class SOGA:
 
         self.population = _population
         self.history.write_history()
+
+    def optimise(self, fn):
+
+        """
+        Responsible for managing the optimisation process.
+
+        Parameters
+        ----------
+        fn : function
+            Fitness function used to evaluate the fitness.
+        """
+
+        self.reset_environment()
+        self.initialise_population()
+
+        while not self.termination_manager.termination_check():
+            self.step_optimise(fn)
+            self.iteration += 1

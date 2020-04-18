@@ -1,6 +1,6 @@
 import pytest
 from pyga.individual import Individual
-from pyga.soga import SOGA
+from pyga.opt.soga import SOGA
 
 
 class TestSOGA:
