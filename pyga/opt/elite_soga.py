@@ -11,12 +11,12 @@ from ..utils.crossovers import OnePointCrossover
 from ..utils.termination_manager import IterationTerminationManager
 
 
-class SOGA(BaseGA):
+class EliteSOGA(BaseGA):
 
-    def __init__(self, bounds, n_individuals, n_iterations):
+    def __init__(self, bounds, n_individuals, n_elites, n_iterations):
 
         """
-        Initialiser for SOGA class.
+        Initialiser for EliteSOGA class.
 
         Parameters
         ----------
@@ -24,6 +24,8 @@ class SOGA(BaseGA):
             Lower and upper bounds of the search space.
         n_individuals : int
             Number of individuals for use in the population.
+        n_elites : int
+            Number of elites to maintain at each iteration.
         n_iterations : int
             Number of iterations to optimise for.
 
@@ -47,6 +49,10 @@ class SOGA(BaseGA):
 
         super().__init__(bounds, n_individuals)
 
+        if not n_elites % 2 == 0:
+            raise ValueError('Number of elites must be even.')
+
+        self.n_elites = n_elites
         self.n_iterations = n_iterations
         self.best_individual = None
 
@@ -125,8 +131,10 @@ class SOGA(BaseGA):
 
         self.selection.preprocess(self.population)
 
-        _population = []
-        for i in range(self.n_individuals // 2):
+        _ps = sorted(self.population, key=lambda x: x.fitness)
+        _population = _ps[:self.n_elites]
+
+        for i in range((self.n_individuals - self.n_elites) // 2):
             parent_a = self.selection.select(self.population)
             parent_b = self.selection.select(self.population)
 
