@@ -1,11 +1,11 @@
 import copy
-import numpy as np
 
 from .base_ga import BaseGA
 from ..individual import Individual
 from ..constraints.constraint_manager import ConstraintManager
 
 from ..utils.history import GeneralHistory
+from ..utils.mutations import RandomMutation
 from ..utils.selections import TournamentSelection
 from ..utils.crossovers import OnePointCrossover
 from ..utils.termination_manager import IterationTerminationManager
@@ -19,6 +19,7 @@ class SOGA(BaseGA):
         self.n_iterations = n_iterations
         self.best_individual = None
 
+        self.mutation = RandomMutation()
         self.selection = TournamentSelection()
         self.crossover = OnePointCrossover()
 
@@ -59,26 +60,6 @@ class SOGA(BaseGA):
             self.best_individual = copy.deepcopy(individual)
 
     @staticmethod
-    def mutate(individual):
-
-        """
-        Slightly alter the position of the individual.
-
-        Parameters
-        ----------
-        individual : Individual
-            Individual for which to mutate the position.
-
-        Returns
-        -------
-        Individual
-            Individual the the mutated position.
-        """
-
-        individual.position = individual.position * np.random.uniform(0.9, 1.1)
-        return individual
-
-    @staticmethod
     def evaluate_fitness(individual, fn):
 
         """
@@ -117,8 +98,12 @@ class SOGA(BaseGA):
         for i in range(self.n_individuals // 2):
             parent_a = self.selection.select(self.population)
             parent_b = self.selection.select(self.population)
+
             child_a, child_b = self.crossover.cross(parent_a, parent_b)
-            child_a, child_b = self.mutate(child_a), self.mutate(child_b)
+
+            child_a = self.mutation.mutate(child_a)
+            child_b = self.mutation.mutate(child_b)
+
             _population.extend([child_a, child_b])
 
         self.population = _population
