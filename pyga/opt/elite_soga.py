@@ -13,9 +13,46 @@ from ..utils.termination_manager import IterationTerminationManager
 
 class EliteSOGA(BaseGA):
 
-    def __init__(self, bounds, n_individuals, n_iterations):
+    def __init__(self, bounds, n_individuals, n_elites, n_iterations):
+
+        """
+        Initialiser for EliteSOGA class.
+
+        Parameters
+        ----------
+        bounds : dict
+            Lower and upper bounds of the search space.
+        n_individuals : int
+            Number of individuals for use in the population.
+        n_elites : int
+            Number of elites to maintain at each iteration.
+        n_iterations : int
+            Number of iterations to optimise for.
+
+        Attributes
+        ----------
+        best_individual : Individual
+            The current best individual from the optimisation.
+        mutation : BaseMutation
+            Muation method to use.
+        selection : BaseSelection
+            Selection method to use.
+        crossover : BaseCrossover.
+            Crossover method to use.
+        history : BaseHistory
+            Object to store the history of the optimisation process to.
+        termination_manager : BaseTerminationManager
+            Manager to determine when termination criteria is met.
+        constraint_manager : ConstraintManager
+            Manager to determine if imposed constraints are violated.
+        """
+
         super().__init__(bounds, n_individuals)
 
+        if not n_elites % 2 == 0:
+            raise ValueError('Number of elites must be even.')
+
+        self.n_elites = n_elites
         self.n_iterations = n_iterations
         self.best_individual = None
 
@@ -75,9 +112,41 @@ class EliteSOGA(BaseGA):
 
         individual.fitness = fn(individual.position)
 
-    # TODO >> Implement EliteSOGA::step_optimise()
     def step_optimise(self, fn):
-        raise NotImplementedError('EliteSOGA::step_optimise()')
+
+        """
+        Progresses the optimisation prcedure by a single iteration.
+
+        Parameters
+        ----------
+        fn : function
+            Fitness function used to evaluate the fitness.
+        """
+
+        for individual in self.population:
+            self.evaluate_fitness(individual, fn)
+
+            if not self.constraint_manager.violates_position(individual):
+                self.update_best(individual)
+
+        self.selection.preprocess(self.population)
+
+        _ps = sorted(self.population, key=lambda x: x.fitness)
+        _population = _ps[:self.n_elites]
+
+        for i in range((self.n_individuals - self.n_elites) // 2):
+            parent_a = self.selection.select(self.population)
+            parent_b = self.selection.select(self.population)
+
+            child_a, child_b = self.crossover.cross(parent_a, parent_b)
+
+            child_a = self.mutation.mutate(child_a)
+            child_b = self.mutation.mutate(child_b)
+
+            _population.extend([child_a, child_b])
+
+        self.population = _population
+        self.history.write_history()
 
     def optimise(self, fn):
 

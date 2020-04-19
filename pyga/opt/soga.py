@@ -14,6 +14,37 @@ from ..utils.termination_manager import IterationTerminationManager
 class SOGA(BaseGA):
 
     def __init__(self, bounds, n_individuals, n_iterations):
+
+        """
+        Initialiser for SOGA class.
+
+        Parameters
+        ----------
+        bounds : dict
+            Lower and upper bounds of the search space.
+        n_individuals : int
+            Number of individuals for use in the population.
+        n_iterations : int
+            Number of iterations to optimise for.
+
+        Attributes
+        ----------
+        best_individual : Individual
+            The current best individual from the optimisation.
+        mutation : BaseMutation
+            Muation method to use.
+        selection : BaseSelection
+            Selection method to use.
+        crossover : BaseCrossover.
+            Crossover method to use.
+        history : BaseHistory
+            Object to store the history of the optimisation process to.
+        termination_manager : BaseTerminationManager
+            Manager to determine when termination criteria is met.
+        constraint_manager : ConstraintManager
+            Manager to determine if imposed constraints are violated.
+        """
+
         super().__init__(bounds, n_individuals)
 
         self.n_iterations = n_iterations
