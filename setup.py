@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='PyGAopt',
-    version='1.0.0',
+    version='1.0.1',
     description='A Python Genetic Algorithm Library.',
     long_description=readme,
     long_description_content_type='text/markdown',
