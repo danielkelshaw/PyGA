@@ -1,5 +1,6 @@
 # PyGA
 
+[![PyPI version](https://badge.fury.io/py/PyGAopt.svg)](https://badge.fury.io/py/PyGAopt)
 [![Build Status](https://travis-ci.org/danielkelshaw/PyGA.svg?branch=master)](https://travis-ci.org/danielkelshaw/PyGA)
 
 PyGA is an extensible toolkit for Genetic Algorithms (GA) in Python.
@@ -15,6 +16,13 @@ custom implementations which interface with existing functionality.
 ## **Features:**
 - [x] High-level module for Genetic Algorithms.
 - [x] Extensible API for implementing new functionality.
+
+## **Installation:**
+To install PyGA, run this command in your terminal:
+
+```shell
+$ pip install pygaopt
+```
 
 ## **Basic Usage:**
 
